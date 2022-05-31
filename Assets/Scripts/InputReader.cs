@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
+
 public class InputReader : MonoBehaviour, Controls.IPlayerActions
 {
     public event Action JumpEvent;
@@ -11,6 +13,10 @@ public class InputReader : MonoBehaviour, Controls.IPlayerActions
 
 
     public Vector2 MovementValue { get; private set; }
+    public bool IsAttacking { get; private set; }
+    
+    
+    
     private Controls controls;
 
     private void Start()
@@ -72,5 +78,18 @@ public class InputReader : MonoBehaviour, Controls.IPlayerActions
         }
 
         CancelEvent?.Invoke();
+    }
+
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            IsAttacking = true;
+        }
+
+        else if (context.canceled)
+        {
+            IsAttacking = false;
+        }
     }
 }

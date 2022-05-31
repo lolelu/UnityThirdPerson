@@ -21,7 +21,13 @@ public class PlayerFreeLookState : PlayerBaseState
 
     public override void Tick(float deltaTime)
     {
-        var movement = CalculateMovement(deltaTime);
+        if (stateMachine.InputReader.IsAttacking)
+        {
+            stateMachine.SwitchState(new PlayerAttackingState(stateMachine));
+            return;
+        }
+        
+        var movement = CalculateMovement();
         
         Move(movement*stateMachine.FreeLookMovementSpeed, deltaTime);
 
@@ -51,7 +57,7 @@ public class PlayerFreeLookState : PlayerBaseState
         stateMachine.SwitchState(new PlayerTargetingState(stateMachine));
     }
 
-    private Vector3 CalculateMovement(float deltaTime)
+    private Vector3 CalculateMovement()
     {
         var forward = stateMachine.MainCameraTransform.forward;
         var right = stateMachine.MainCameraTransform.right;
