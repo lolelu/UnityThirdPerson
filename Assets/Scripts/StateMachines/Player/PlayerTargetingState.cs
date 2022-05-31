@@ -3,7 +3,12 @@
 namespace StateMachines.Player
 {
     public class PlayerTargetingState : PlayerBaseState
+    
+    
     {
+        
+        private readonly int _targetingBlendTreeHash = Animator.StringToHash("TargetingBlendTree");
+
         public PlayerTargetingState(PlayerStateMachine stateMachine) : base(stateMachine)
         {
         }
@@ -11,11 +16,16 @@ namespace StateMachines.Player
         public override void Enter()
         {
             stateMachine.InputReader.CancelEvent += OnCancel;
+            stateMachine.Animator.Play(_targetingBlendTreeHash);
         }
 
         public override void Tick(float deltaTime)
         {
-            Debug.Log(stateMachine.Targeter.CurrentTarget.name);
+            if (stateMachine.Targeter.CurrentTarget == null)
+            {
+                stateMachine.SwitchState(new PlayerFreeLookState(stateMachine));
+                    return;
+            }
         }
 
         public override void Exit()
